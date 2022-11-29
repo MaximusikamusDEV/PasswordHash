@@ -1,1 +1,1 @@
-int passwordhash(string& s, const char& c);
+int passwordhash(std::string& login, std::string& password);

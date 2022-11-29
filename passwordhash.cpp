@@ -1,11 +1,11 @@
 #include <iostream>
 #include <conio.h>
-#include <ctime>
 #include <windows.h>
 #include <stdio.h>
 #include <fstream>
 #include <functional>
 #include <map>
+#include "passwordhash.h"
 
 using namespace std;
 
@@ -14,7 +14,7 @@ map <char, string> map_for_encryption;
 void encryption(string& object);
 char ReChange(char& symbol);
 
-int passwordhash(string& s, const char& c)
+int passwordhash(string& login, string& password)
 {
     ifstream input("information.k");
     ifstream info_for_encryption("jk911.save");
@@ -24,13 +24,11 @@ int passwordhash(string& s, const char& c)
     {
         cout << "Can't find correct file.\n Do you want to continue? Y/N\n";
         char symbol;
-        symbol = getch();
-        ReChange(symbol);
-        while (symbol != 'Y' && symbol != 'N')
+        do
         {
             symbol = getch();
             ReChange(symbol);
-        }
+        } while (symbol != 'N' && symbol != 'Y');
         if (symbol == 'N') return 0;
     }
 
@@ -40,25 +38,10 @@ int passwordhash(string& s, const char& c)
     while (info_for_encryption >> letter >> code)
         map_for_encryption[letter] = code;
 
-    ReChange(c);
-
-    string login = "", password = "", word = "";
-    hash <string> h;
-
-    for (int i = 0; i < s.size(); i++)
-    {
-        if (s[i] == ' ')
-        {
-            login = word;
-            word = "";
-            continue;
-        }
-        word += s[i];
-    }
-    password = word;
-
     encryption(login);
     encryption(password);
+
+    hash <string> h;
 
     string login_h = to_string(h(login));
     string password_h = to_string(h(password));
@@ -73,37 +56,9 @@ int passwordhash(string& s, const char& c)
         input.open("information.k");
     }
 
-    string h_login, h_password;
-
-    while (input >> h_login >> h_password)
-    {
-        if (h_login == login_h)
-        {
-            if (c == 'L')
-            {
-                if (h_password == password_h)
-                    return 1;
-            }
-            else if (c == 'R')
-            {
-                cout << "Login is already registered in the system.\n";
-                return 0;
-            }
-        }
-    }
-    input.close();
     output.open("information.k", ios_base::app | ios_base::out);
-    if (c == 'R')
-    {
-        cout << "Register completed successfully.\n";
-        output << login_h << ' ' << password_h << '\n';
-        return 1;
-    }
-    if (c == 'L')
-    {
-        cout << "Login or password incorrect.\n";
-        return 0;
-    }
+    output << login_h << ' ' << password_h << '\n';
+    return 0;
 }
 
 void encryption(string& object)
