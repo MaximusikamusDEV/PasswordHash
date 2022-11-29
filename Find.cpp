@@ -12,7 +12,7 @@ void Find()
 	const int Max = 1000;
 	char Comment[Max] = "";
 	char Word[Max];
-	
+
 	ifstream fin;
 
 	fin.open("Data.txt");
@@ -51,15 +51,12 @@ void Find()
 		{
 			place = strlen(Comment) - strlen(num);
 			wordsize = strlen(Word);
-			  
+
 				for (int i = place; i < wordsize+place; i++)
 					Comment[i] = '*';
 
 				CountOfBadWords++;
 		}
-		
-		Word[0] = '\0';
-
 	}
 
 	PercentOfBadWords = CountOfBadWords / CountOfWords * 100;;
@@ -68,7 +65,7 @@ void Find()
 
 	fout.open("Answer.txt");
 
-	
+
 
 	fout << "Text after checking: " << Comment << endl
 		<< "Total count of words in your text: " << CountOfWords << endl
@@ -76,5 +73,5 @@ void Find()
 		<< "Percent of Bad words in your text: " << PercentOfBadWords << "%";
 
 	fout.close();
-  
+
 }
